@@ -34,19 +34,19 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	void FixedUpdate() {
-		if(dead == false) {
+		if(!dead) {
 			Run();
 			Jump();
 		}
 	}
 
 	void Update() {
-		if(!gameController.IsPaused()){
+		if(!gameController.IsPaused() && !dead){
 			moveX = Input.GetAxisRaw("Horizontal");
 			if(!jumping && Input.GetButtonDown("Jump") && IsOnFloor()) {
 				jumping = true;
 			}
-			if(Input.GetButtonDown("Fire1")) {
+			if(Input.GetButtonDown("Fire1") && !attacking) {
 				StartCoroutine(Attack());
 			}
 			if(hurting) {
@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour {
 					Hurt();
 				}
 			}
-			if(gameController.GetTime() >= timeToDead && !dead) {
+			if(gameController.GetTime() >= timeToDead) {
 				Dead();
 			}
 		}
@@ -103,16 +103,14 @@ public class PlayerController : MonoBehaviour {
 			jumping = false;
 		} else
 
-		if(!attacking) {
-			if(IsOnFloor()) {
-				anim.SetTrigger("Ground");
-				anim.ResetTrigger("Up");
-				anim.ResetTrigger("Down");
-			} else if(rb.velocity.y < 0) {
-				anim.SetTrigger("Down");
-			} else if(rb.velocity.y > 0) {
-				anim.SetTrigger("Up");
-			}
+		if(IsOnFloor()) {
+			anim.SetTrigger("Ground");
+			anim.ResetTrigger("Up");
+			anim.ResetTrigger("Down");
+		} else if(rb.velocity.y < 0) {
+			anim.SetTrigger("Down");
+		} else if(rb.velocity.y > 0) {
+			anim.SetTrigger("Up");
 		}
 	}
 
@@ -120,7 +118,7 @@ public class PlayerController : MonoBehaviour {
 		attacking = true;
 		AudioSource.PlayClipAtPoint(attackSound, Camera.main.transform.position);
 		anim.SetTrigger("Attack");
-		yield return new WaitForSeconds(1);
+		yield return new WaitForSeconds(0.5f);
 		attacking = false;
 	}
 
@@ -135,6 +133,8 @@ public class PlayerController : MonoBehaviour {
 			hurting = true;
 		} else if(other.CompareTag("Gems")) {
 			gameController.UpdateGems(1);
+		} else if(other.gameObject.CompareTag("RedGems")) {
+			gameController.UpdateGems(10);
 		} else if(other.CompareTag("Cherries")) {
 			gameController.UpdateLifes(1);
 		} else if(other.CompareTag("Water")) {
@@ -178,7 +178,7 @@ public class PlayerController : MonoBehaviour {
 		Camera.main.GetComponent<AudioSource>().Stop();
 		AudioSource.PlayClipAtPoint(deathSound, Camera.main.transform.position);
 		rb.velocity = Vector2.zero;
-		anim.SetTrigger("Dead");
+		anim.SetBool("Dead", true);
 		gameController.UpdateLifes(-1);
 		dead = true;
 		if(gameController.GetLifesCount() == 0) {

@@ -26,14 +26,14 @@ public class GoalSignalController : MonoBehaviour
     IEnumerator Goal() {
         float t = 0;
         while (t < duration) {
-            t = t + Time.deltaTime;
+            t += Time.deltaTime;
             Vector3 newPosition = Vector3.Lerp(startPos, finalPos, t/duration);
             transform.position = newPosition;
             yield return null;
         }
         t = 0;
         while (t < duration) {
-            t = t + Time.deltaTime;
+            t += Time.deltaTime;
             Vector3 newPosition = Vector3.Lerp(finalPos, startPos, t/duration);
             transform.position = newPosition;
             yield return null;

@@ -8,8 +8,11 @@ public class GameController : MonoBehaviour
     const int LIFES = 3;
     public const float TIME_TO_DEAD = 600;
     public const int GEM_BONUS_MULT = 100;
+    const int SCORE_CALC_TIME = 5;
+    [SerializeField] AudioClip extraLifeSound;
     private static int lifesCount = LIFES;
     private static int score = 0;
+    private static int continues = 0;
     private int bonusTime;
     private int gemsCount;
     private float timeInSeconds;
@@ -39,12 +42,8 @@ public class GameController : MonoBehaviour
             }
         }
 
-        if(gameOver && Input.GetKeyDown(KeyCode.C)) {
-            lifesCount = LIFES;
-            score = 0;
-            msg = "";
-            gameOver = false;
-            extraLifeTaken = false;
+        if(gameOver && Input.GetKeyDown(KeyCode.C) && continues > 0) {
+            NewGame(continues-1);
             ReloadScene();
         }
 
@@ -77,13 +76,16 @@ public class GameController : MonoBehaviour
     }
 
     private IEnumerator CalculateScore() {
-        float t = 0;
-        int duration = 4;
+        float t;
+        int duration;
         int initialScore = score;
         int partial = score + bonusTime;
         int init = bonusTime;
+
         yield return new WaitForSeconds(2);
         GameObject.Find("ScoreBoard").GetComponent<AudioSource>().Play();
+        t = 0;
+        duration = (bonusTime == 0) ? 0 : SCORE_CALC_TIME;
         while (t < duration) {
             t += Time.deltaTime;
             bonusTime = ((int)Mathf.Lerp(init, 0, t / duration));
@@ -91,6 +93,7 @@ public class GameController : MonoBehaviour
             yield return null;
         }
         t = 0;
+        duration = (gemsCount == 0) ? 0 : SCORE_CALC_TIME;
         partial = score + (gemsCount * GEM_BONUS_MULT);
         init = gemsCount;
         initialScore = score;
@@ -114,7 +117,11 @@ public class GameController : MonoBehaviour
 
     public void GameOver() {
         gameOver = true;
-        msg = "GAME OVER\nPRESS <C> TO CONTINUE OR <ESC> TO QUIT";
+        if (continues > 0) {
+            msg = "GAME OVER\nPRESS <C> TO CONTINUE OR <ESC> TO QUIT";
+        } else {
+            msg = "GAME OVER\nPRESS <ESC> TO QUIT";
+        }
     }
 
     public String GetMessage() {
@@ -142,6 +149,7 @@ public class GameController : MonoBehaviour
     public void UpdateGems(int gems) {
         gemsCount += gems;
         if(gemsCount > 99) {
+            AudioSource.PlayClipAtPoint(extraLifeSound, Camera.main.transform.position);
             ResetGems();
             UpdateLifes(1);
         }
@@ -153,6 +161,10 @@ public class GameController : MonoBehaviour
 
     public void UpdateScore(int newScore) {
         score += newScore;
+    }
+
+    public void AddContinues() {
+        continues++;
     }
 
     public void ResetGems() {
@@ -177,16 +189,37 @@ public class GameController : MonoBehaviour
 
     public void SceneClear() {
         finished = true;
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        GameObject scoreBoard = GameObject.FindGameObjectWithTag("GUI").transform.Find("ScoreBoard").gameObject;
+        GameObject player = GameObject.Find("Player");
+        GameObject scoreBoard = GameObject.Find("GUI").transform.Find("ScoreBoard").gameObject;
         bonusTime = (int)(TIME_TO_DEAD - timeInSeconds) * 10;
         
         player.GetComponent<PlayerController>().enabled = false;
+        player.GetComponent<Animator>().SetTrigger("Ground");
         player.GetComponent<Animator>().SetBool("Running", true);
         player.GetComponent<Rigidbody2D>().velocity = Vector2.right * 10;
         player.GetComponent<SpriteRenderer>().flipX = false;
 
         scoreBoard.SetActive(true);
         StartCoroutine(CalculateScore());
+    }
+
+    public void NewGame() {
+        lifesCount = LIFES;
+        score = 0;
+        continues = 0;
+        msg = "";
+        gameOver = false;
+        paused = false;
+        extraLifeTaken = false;
+    }
+
+    public void NewGame(int newContinues) {
+        lifesCount = LIFES;
+        score = 0;
+        continues = newContinues;
+        msg = "";
+        gameOver = false;
+        paused = false;
+        extraLifeTaken = false;
     }
 }

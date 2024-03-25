@@ -15,6 +15,8 @@ public class ItemController : MonoBehaviour
         if(other.CompareTag("Player")) {
             if(gameObject.CompareTag("Cherries")) {
                 gameController.ExtraLifeTaken();
+            } else if (gameObject.CompareTag("Continue")) {
+                gameController.AddContinues();
             }
             Instantiate(feed, transform.position, Quaternion.identity);
             Destroy(gameObject);

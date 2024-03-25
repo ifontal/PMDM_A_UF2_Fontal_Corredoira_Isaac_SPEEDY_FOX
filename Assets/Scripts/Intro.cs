@@ -6,17 +6,18 @@ using UnityEngine.UI;
 public class Intro : MonoBehaviour
 {
     [SerializeField] float speed, maxPosition;
+    [SerializeField] Text msg;
     [SerializeField] GameController gameController;
     Rigidbody2D rb;
     Animator anim;
-    Text msg;
 
     private void Start() {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         anim.SetBool("Running", true);
         rb.velocity = new Vector2(speed * Time.fixedDeltaTime, rb.velocity.y);
-        msg = GameObject.Find("Message").GetComponent<Text>();
+        msg.text = "PRESS ENTER TO START GAME";
+        gameController.NewGame();
         StartCoroutine(Decoration());
     }
 
