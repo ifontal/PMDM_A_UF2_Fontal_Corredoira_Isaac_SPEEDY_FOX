@@ -45,3 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   extraLifeSound: {fileID: 8300000, guid: 08463cfc99a706843a9c8f8264e9f4d5, type: 3}
+  gemSound: {fileID: 8300000, guid: c5e3cea303d034440bb83dcd15b27343, type: 3}
+  continueSound: {fileID: 8300000, guid: 6a5dbea427ba8b843970e035d52d4ebe, type: 3}

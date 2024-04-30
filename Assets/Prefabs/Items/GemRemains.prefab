@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4922277361243825165}
   - component: {fileID: 5674045055564859475}
   - component: {fileID: 3781876044284904844}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: GemRemains
   m_TagString: Gems
   m_Icon: {fileID: 0}
@@ -186,4 +186,4 @@ MonoBehaviour:
   blinkNum: 20
   lifeTime: 10
   force: 2
-  feed: {fileID: 1122234116124650222, guid: 5fd83e18d126c324b9f82a5c8db19501, type: 3}
+  feed: {fileID: 1122234116124650222, guid: 1ebefbaa3dc0fd245a3d18c72681aef0, type: 3}

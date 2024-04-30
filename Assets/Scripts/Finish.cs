@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Finish : MonoBehaviour
 {
     [SerializeField] float speed, maxPosition;
-    [SerializeField] Text msg;
+    [SerializeField] Text header, msg, score, bottom;
     [SerializeField] GameController gameController;
     Rigidbody2D rb;
     Animator anim;
@@ -15,8 +15,7 @@ public class Finish : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         anim.SetBool("Running", true);
-        rb.velocity = new Vector2(speed * Time.fixedDeltaTime, rb.velocity.y);
-        msg.text = "Congratulations!\nThanks for playing\n\nYour Score: " + gameController.GetScore() + "\n\n\nPress <ESC> to Quit";
+        score.text = "Your Score: " + gameController.GetScore();
         StartCoroutine(Decoration());
         StartCoroutine(Reload());
     }
@@ -28,6 +27,17 @@ public class Finish : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Escape)) {
             Application.Quit();
         }
+        if(Input.GetKeyDown(KeyCode.Return)) {
+            SceneManager.LoadScene(0);
+        }
+    }
+
+    private void FixedUpdate() {
+        rb.velocity = new Vector2(speed * Time.fixedDeltaTime, rb.velocity.y);
+    }
+
+    private void OnGUI() {
+        msg.text = gameController.GetMessage();
     }
 
     IEnumerator Decoration() {
@@ -37,13 +47,17 @@ public class Finish : MonoBehaviour
             t = 0;
             while (t < duration) {
                 t += Time.deltaTime;
-                msg.color = Color.Lerp(Color.green, Color.red, t / duration);
+                header.color = Color.Lerp(Color.blue, Color.magenta, t / duration);
+                score.color = Color.Lerp(Color.green, Color.red, t / duration);
+                bottom.color = Color.Lerp(Color.red, Color.cyan, t / duration);
                 yield return null;
             }
             t = 0;
             while (t < duration) {
                 t += Time.deltaTime;
-                msg.color = Color.Lerp(Color.red, Color.green, t / duration);
+                header.color = Color.Lerp(Color.magenta, Color.blue, t / duration);
+                score.color = Color.Lerp(Color.red, Color.green, t / duration);
+                bottom.color = Color.Lerp(Color.cyan, Color.red, t / duration);
                 yield return null;
             }
         }

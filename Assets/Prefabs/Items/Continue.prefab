@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4604632504210063035}
   - component: {fileID: 1528368821267545371}
+  - component: {fileID: -7099680353673740479}
   - component: {fileID: 7892357630531186654}
   - component: {fileID: 6657339804887001741}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Continue
   m_TagString: Continue
   m_Icon: {fileID: 0}
@@ -86,6 +87,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &-7099680353673740479
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3716336875143403051}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 28a8396a47e3f514894734bf37489ed0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!58 &7892357630531186654
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -133,5 +155,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ed5a52d9c01484a89f4d31522d40e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  feed: {fileID: 1122234116124650222, guid: a9f32645f03882548b297d18e1184869, type: 3}
+  feed: {fileID: 1122234116124650222, guid: 1ebefbaa3dc0fd245a3d18c72681aef0, type: 3}
   gameController: {fileID: 0}

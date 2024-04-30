@@ -6,10 +6,12 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     const int LIFES = 3;
-    public const float TIME_TO_DEAD = 600;
+    const int SCORE_CALC_TIME = 3;
+    const int TIME_BONUS_MULT = 10;
+    const float PLAYER_EXIT_SPEED = 15;
+    public const float TIME_TO_DEAD = 300;
     public const int GEM_BONUS_MULT = 100;
-    const int SCORE_CALC_TIME = 5;
-    [SerializeField] AudioClip extraLifeSound;
+    [SerializeField] AudioClip extraLifeSound, gemSound, continueSound;
     private static int lifesCount = LIFES;
     private static int score = 0;
     private static int continues = 0;
@@ -17,12 +19,13 @@ public class GameController : MonoBehaviour
     private int gemsCount;
     private float timeInSeconds;
     private bool finished;
+    private bool paused = false;
     private static String msg = "";
     private static bool gameOver = false;
-    private static bool paused = false;
     private static bool extraLifeTaken = false;
 
     private void Start() {
+        Time.timeScale = 1;
         gemsCount = 0;
         timeInSeconds = 0;
         bonusTime = 0;
@@ -34,7 +37,7 @@ public class GameController : MonoBehaviour
             timeInSeconds += Time.deltaTime;
         }
 
-        if(!gameOver && Input.GetKeyDown(KeyCode.P)) {
+        if(!gameOver && Input.GetKeyDown(KeyCode.P) && SceneManager.GetActiveScene().buildIndex != 0) {
             if(paused) {
                 ResumeGame();
             } else {
@@ -47,7 +50,7 @@ public class GameController : MonoBehaviour
             ReloadScene();
         }
 
-        if(gameOver && Input.GetKeyDown(KeyCode.Escape)) {
+        if(Input.GetKeyDown(KeyCode.Escape)) {
             Application.Quit();
         }
     }
@@ -107,6 +110,18 @@ public class GameController : MonoBehaviour
         Invoke("NextScene", 3);
     }
 
+    private IEnumerator PlayerExit() {
+        GameObject player = GameObject.Find("Player");
+        player.GetComponent<PlayerController>().enabled = false;
+        player.GetComponent<Animator>().SetTrigger("Ground");
+        player.GetComponent<Animator>().SetBool("Running", true);
+        player.transform.localScale = new Vector2(Mathf.Abs(transform.localScale.x), transform.localScale.y);
+        for(int i = 0; i < 5; i++) {
+            player.GetComponent<Rigidbody2D>().velocity = Vector2.right * PLAYER_EXIT_SPEED;
+            yield return null;
+        }
+    }
+
     public void ExtraLifeTaken() {
         extraLifeTaken = true;
     }
@@ -147,15 +162,18 @@ public class GameController : MonoBehaviour
     }
 
     public void UpdateGems(int gems) {
+        AudioSource.PlayClipAtPoint(gemSound, Camera.main.transform.position);
         gemsCount += gems;
         if(gemsCount > 99) {
-            AudioSource.PlayClipAtPoint(extraLifeSound, Camera.main.transform.position);
-            ResetGems();
+            gemsCount -= 100;
             UpdateLifes(1);
         }
     }
 
     public void UpdateLifes(int lifes) {
+        if(lifes > 0) {
+            AudioSource.PlayClipAtPoint(extraLifeSound, Camera.main.transform.position);
+        }
         lifesCount += lifes;
     }
 
@@ -164,6 +182,7 @@ public class GameController : MonoBehaviour
     }
 
     public void AddContinues() {
+        AudioSource.PlayClipAtPoint(continueSound, Camera.main.transform.position);
         continues++;
     }
 
@@ -189,16 +208,9 @@ public class GameController : MonoBehaviour
 
     public void SceneClear() {
         finished = true;
-        GameObject player = GameObject.Find("Player");
+        StartCoroutine(PlayerExit());
         GameObject scoreBoard = GameObject.Find("GUI").transform.Find("ScoreBoard").gameObject;
-        bonusTime = (int)(TIME_TO_DEAD - timeInSeconds) * 10;
-        
-        player.GetComponent<PlayerController>().enabled = false;
-        player.GetComponent<Animator>().SetTrigger("Ground");
-        player.GetComponent<Animator>().SetBool("Running", true);
-        player.GetComponent<Rigidbody2D>().velocity = Vector2.right * 10;
-        player.GetComponent<SpriteRenderer>().flipX = false;
-
+        bonusTime = (int)(TIME_TO_DEAD - timeInSeconds) * TIME_BONUS_MULT;
         scoreBoard.SetActive(true);
         StartCoroutine(CalculateScore());
     }

@@ -300,9 +300,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5816796514426869800}
   - component: {fileID: 7794237855537518752}
+  - component: {fileID: 3542022980278576299}
   - component: {fileID: 2979468649803237992}
   - component: {fileID: 4858273282003480410}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Signal
   m_TagString: GoalSignal
   m_Icon: {fileID: 0}
@@ -318,7 +319,7 @@ Transform:
   m_GameObject: {fileID: 6865961896959503369}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.35, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -365,7 +366,7 @@ SpriteRenderer:
   m_SortingLayerID: -1639807351
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 002c7bbbf04cd6341a1f88f6429c5bfb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fbbb36a37d2150d4aa4c7e707ddc0b83, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -376,6 +377,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &3542022980278576299
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6865961896959503369}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b4a78c3b9a0c29a4f91ef7649deca4a8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!61 &2979468649803237992
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -412,7 +434,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.6666667, y: 2.6666667}
+    oldSize: {x: 2.25, y: 2.25}
     newSize: {x: 1.125, y: 1.25}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

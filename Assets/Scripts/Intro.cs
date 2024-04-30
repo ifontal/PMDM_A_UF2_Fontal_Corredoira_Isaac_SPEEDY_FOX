@@ -12,10 +12,10 @@ public class Intro : MonoBehaviour
     Animator anim;
 
     private void Start() {
+        Cursor.visible = false;
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         anim.SetBool("Running", true);
-        rb.velocity = new Vector2(speed * Time.fixedDeltaTime, rb.velocity.y);
         msg.text = "PRESS ENTER TO START GAME";
         gameController.NewGame();
         StartCoroutine(Decoration());
@@ -28,6 +28,10 @@ public class Intro : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Return)) {
             SceneManager.LoadScene(1);
         }
+    }
+
+    private void FixedUpdate() {
+        rb.velocity = new Vector2(speed * Time.fixedDeltaTime, rb.velocity.y);
     }
 
     IEnumerator Decoration() {

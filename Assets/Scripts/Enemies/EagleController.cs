@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,22 +8,24 @@ public class EagleController : MonoBehaviour
     [SerializeField] float moveDistance, attackDistance, speed, attackForce;
     [SerializeField] GameObject death;
     Rigidbody2D rb;
+    Collider2D col;
     Animator anim;
     GameObject player;
-    Vector2 distance;
+    Vector2 distance, direction, engageDirection;
     GameController gc;
     bool attack = false;
     
     void Start() {
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
         anim = GetComponent<Animator>();
         player = GameObject.Find("Player");
         gc = GameObject.Find("GameManager").GetComponent<GameController>();
     }
 
     void Update() {
-        distance = transform.position - player.transform.position;
         if(!attack) {
+            distance = transform.position - player.transform.position;
             if(distance.magnitude < moveDistance) {
                 StartCoroutine(Attack());
             }
@@ -37,13 +40,28 @@ public class EagleController : MonoBehaviour
         } else {
             rb.AddForce(Vector2.left * speed, ForceMode2D.Impulse);
         }
-        while(distance.magnitude > attackDistance) {
+        direction = new Vector2(Mathf.Sign(rb.velocity.x), -1);
+        engageDirection = new Vector2(Mathf.Sign(rb.velocity.x) * 1.1f, -1);
+        DateTime startTime = DateTime.Now;
+        while(!PlayerEngaged()) {
             yield return null;
+            if(DateTime.Now - startTime > TimeSpan.Parse("00:00:20")) {
+                Destroy(gameObject);
+            }
         }
-        rb.AddForce(-distance/distance.magnitude * attackForce, ForceMode2D.Impulse);
+        rb.AddForce(direction * attackForce, ForceMode2D.Impulse);
         anim.SetTrigger("Attack");
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(5);
         Destroy(gameObject);
+    }
+
+    private bool PlayerEngaged() {
+        RaycastHit2D rc = Physics2D.Raycast(
+            col.bounds.center,
+            engageDirection,
+            attackDistance,
+            LayerMask.GetMask("Player"));
+        return rc.collider != null;
     }
 
     private void OnTriggerEnter2D(Collider2D other) {

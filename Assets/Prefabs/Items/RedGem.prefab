@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1787811257483775297}
   - component: {fileID: 5477070319590626296}
   - component: {fileID: -9114821888245942692}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: RedGem
   m_TagString: RedGems
   m_Icon: {fileID: 0}
@@ -155,5 +155,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ed5a52d9c01484a89f4d31522d40e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  feed: {fileID: 1122234116124650222, guid: 5fd83e18d126c324b9f82a5c8db19501, type: 3}
+  feed: {fileID: 1122234116124650222, guid: 1ebefbaa3dc0fd245a3d18c72681aef0, type: 3}
   gameController: {fileID: 0}
